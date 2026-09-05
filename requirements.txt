@@ -1,0 +1,6 @@
+streamlit
+pypdf
+python-docx
+google-genai
+python-dotenv
+streamlit-mic-recorder
