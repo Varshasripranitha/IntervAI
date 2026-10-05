@@ -42,6 +42,17 @@ if not api_key:
     st.stop()
 
 client = Groq(api_key=api_key)
+st.write("API Key loaded:", bool(api_key))
+
+try:
+    test = client.chat.completions.create(
+        model="openai/gpt-oss-20b",
+        messages=[{"role": "user", "content": "Say OK"}],
+        max_tokens=10
+    )
+    st.success("Groq connection working: " + test.choices[0].message.content)
+except Exception as e:
+    st.error(f"Groq test failed: {e}")
 
 MODEL = "openai/gpt-oss-20b"
 
