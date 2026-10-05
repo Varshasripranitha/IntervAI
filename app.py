@@ -42,14 +42,7 @@ if not api_key:
     st.stop()
 
 client = Groq(api_key=api_key)
-st.write("API Key loaded:", bool(api_key))
 
-try:
-    models = client.models.list()
-    st.success("Groq API connection working!")
-    st.write("Available models:", len(models.data))
-except Exception as e:
-    st.error(f"Groq connection failed: {e}")
 MODEL = "openai/gpt-oss-20b"
 
 
@@ -63,11 +56,11 @@ def generate_response(prompt):
                 "content": prompt
             }
         ],
-        temperature=0.4
+        temperature=0.4,
+        max_tokens=1000
     )
 
     return response.choices[0].message.content
-
 # =====================================================
 
 # HELPER FUNCTION
