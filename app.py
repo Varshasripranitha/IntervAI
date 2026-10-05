@@ -645,7 +645,7 @@ Only return the interview question.
                                 audio_bytes,
                                 "audio/wav"
                             ),
-                            model="whisper-large-v3-turbo",
+                            model="whisper-large-v3",
                             response_format="text"
                         )
                     )
