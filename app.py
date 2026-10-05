@@ -60,7 +60,13 @@ def generate_response(prompt):
     )
 
     return response.choices[0].message.content
+st.write("Resume text length:", len(resume_text))
+st.write("Job description length:", len(job_description))
 
+resume_text = resume_text[:8000]
+job_description = job_description[:5000]
+
+result = generate_response(prompt)
 
 # =====================================================
 # APP TITLE
