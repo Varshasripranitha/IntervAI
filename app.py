@@ -60,13 +60,7 @@ def generate_response(prompt):
     )
 
     return response.choices[0].message.content
-st.write("Resume text length:", len(resume_text))
-st.write("Job description length:", len(job_description))
 
-resume_text = resume_text[:8000]
-job_description = job_description[:5000]
-
-result = generate_response(prompt)
 
 # =====================================================
 # APP TITLE
@@ -241,6 +235,27 @@ with col1:
                 else:
 
                     # =================================
+                    # LIMIT INPUT SIZE
+                    # =================================
+
+                    resume_text = resume_text[:8000]
+                    job_description = job_description[:5000]
+
+                    # =================================
+                    # DEBUG INFORMATION
+                    # =================================
+
+                    st.write(
+                        "Resume text length:",
+                        len(resume_text)
+                    )
+
+                    st.write(
+                        "Job description length:",
+                        len(job_description)
+                    )
+
+                    # =================================
                     # UPDATED RESUME
                     # =================================
 
@@ -274,7 +289,7 @@ JOB DESCRIPTION:
 
 Provide a clear comparison:
 
-1. Job Match Percentage of Updated Resume
+1. Job Match Percentage
 2. Improvements made compared with the previous resume
 3. Previous suggestions successfully applied
 4. Previous suggestions NOT applied
@@ -601,8 +616,6 @@ Only return the interview question.
                 "✅ Answer recorded successfully!"
             )
 
-            # TEST STEP 1
-
             st.info(
                 "Step 1: Audio received successfully."
             )
@@ -636,8 +649,6 @@ Only return the interview question.
                             response_format="text"
                         )
                     )
-
-                # TEST STEP 2
 
                 st.success(
                     "Step 2: Transcription successful."
@@ -697,8 +708,6 @@ Be supportive and suitable for a fresher.
                     evaluation = generate_response(
                         evaluation_prompt
                     )
-
-                # TEST STEP 3
 
                 st.success(
                     "Step 3: AI evaluation successful."
