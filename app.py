@@ -616,21 +616,15 @@ with col2:
                 # SPEECH TO TEXT
                 # -----------------------------------------
 
-                with st.spinner(
-                    "🎧 Converting your answer to text..."
-                ):
+                with st.spinner("🎧 Converting your answer to text..."):
 
-                    transcription = client.audio.transcriptions.create(
-                        file=(
-                            "answer.wav",
-                            audio["bytes"]
-                        ),
-                        model="whisper-large-v3-turbo",
-                        response_format="text"
-                    )
+               transcription = client.audio.transcriptions.create(
+               file=("answer.wav", audio["bytes"], "audio/wav"),
+               model="whisper-large-v3-turbo",
+               response_format="text"
+               )
 
                 answer_text = transcription
-
                 st.markdown("### 📝 Your Answer")
 
                 st.write(answer_text)
