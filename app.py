@@ -9,27 +9,22 @@ from PIL import Image
 from groq import Groq
 from streamlit_mic_recorder import mic_recorder
 
+
 # =====================================================
-
 # PAGE CONFIGURATION
-
 # =====================================================
 
 st.set_page_config(
-page_title="IntervAI",
-page_icon="🤖",
-layout="wide"
+    page_title="IntervAI",
+    page_icon="🤖",
+    layout="wide"
 )
 
-# =====================================================
-
-# GROQ API CONFIGURATION
-
-# =====================================================
 
 # =====================================================
 # GROQ API CONFIGURATION
 # =====================================================
+
 load_dotenv()
 
 api_key = os.getenv("GROQ_API_KEY")
@@ -46,6 +41,10 @@ client = Groq(api_key=api_key)
 MODEL = "openai/gpt-oss-20b"
 
 
+# =====================================================
+# GENERATE AI RESPONSE
+# =====================================================
+
 def generate_response(prompt):
 
     response = client.chat.completions.create(
@@ -61,56 +60,31 @@ def generate_response(prompt):
     )
 
     return response.choices[0].message.content
-# =====================================================
 
-# HELPER FUNCTION
 
 # =====================================================
-
-# =====================================================
-# HELPER FUNCTION
-# =====================================================
-
-def generate_response(prompt):
-    response = client.chat.completions.create(
-        model=MODEL,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        temperature=0.4
-    )
-
-    return response.choices[0].message.content
-# =====================================================
-
 # APP TITLE
-
 # =====================================================
 
 st.title("🤖 IntervAI")
 
 st.write(
-"Practice interviews, improve your resume, "
-"and get personalized feedback."
+    "Practice interviews, improve your resume, "
+    "and get personalized feedback."
 )
 
 st.divider()
 
+
 # =====================================================
-
 # TWO COLUMNS
-
 # =====================================================
 
 col1, col2 = st.columns(2)
 
+
 # =====================================================
-
 # RESUME ASSISTANT
-
 # =====================================================
 
 with col1:
@@ -395,19 +369,13 @@ RESUME:
                                 prompt
                             )
 
-                        # -----------------------------
-                        # DISPLAY RESULT
-                        # -----------------------------
-
                         st.subheader(
                             analysis_title
                         )
 
                         st.markdown(result)
 
-                        # -----------------------------
                         # SAVE CURRENT RESUME
-                        # -----------------------------
 
                         st.session_state[
                             "previous_resume_text"
@@ -428,16 +396,10 @@ RESUME:
             st.error(
                 f"❌ Could not read the resume: {e}"
             )
-# =====================================================
 
-# MOCK INTERVIEW
 
 # =====================================================
-# =====================================================
 # MOCK INTERVIEW
-# =====================================================
-# =====================================================
-# COLUMN 2 - MOCK INTERVIEW
 # =====================================================
 
 with col2:
@@ -469,52 +431,69 @@ with col2:
     # START INTERVIEW
     # -------------------------------------------------
 
-    if st.button("🎤 Start Interview", key="start_interview"):
+    if st.button(
+        "🎤 Start Interview",
+        key="start_interview"
+    ):
 
         st.session_state["interview_started"] = True
         st.session_state["question_number"] = 1
         st.session_state["evaluation"] = None
 
         question_prompt = """
-        You are an AI interviewer conducting a software
-        job interview for a college student or fresher.
+You are an AI interviewer conducting a software
+job interview for a college student or fresher.
 
-        Start the interview by asking ONE simple technical
-        interview question.
+Start the interview by asking ONE simple technical
+interview question.
 
-        The question should be suitable for a beginner
-        or fresher.
+The question should be suitable for a beginner
+or fresher.
 
-        Do not give the answer.
-        Do not ask multiple questions.
+Do not give the answer.
+Do not ask multiple questions.
 
-        Only return the interview question.
-        """
+Only return the interview question.
+"""
 
         try:
 
-            with st.spinner("🤖 Preparing interview question..."):
+            with st.spinner(
+                "🤖 Preparing interview question..."
+            ):
 
-                result = generate_response(question_prompt)
+                result = generate_response(
+                    question_prompt
+                )
 
-            st.session_state["current_question"] = result
+            st.session_state[
+                "current_question"
+            ] = result
 
             st.rerun()
 
         except Exception as e:
 
-            st.error(f"Could not generate question: {e}")
+            st.error(
+                f"Could not generate question: {e}"
+            )
 
     # -------------------------------------------------
     # INTERVIEW SCREEN
     # -------------------------------------------------
 
-    if st.session_state.get("interview_started", False):
+    if st.session_state.get(
+        "interview_started",
+        False
+    ):
 
-        st.success("Interview started! 🚀")
+        st.success(
+            "Interview started! 🚀"
+        )
 
         question_number = st.session_state.get(
-            "question_number", 1
+            "question_number",
+            1
         )
 
         current_question = st.session_state.get(
@@ -536,9 +515,9 @@ with col2:
         # READ QUESTION ALOUD
         # -------------------------------------------------
 
-        import html
-
-        safe_question = html.escape(current_question)
+        safe_question = html.escape(
+            current_question
+        )
 
         speech_html = f"""
         <script>
@@ -547,7 +526,8 @@ with col2:
 
             const text = `{safe_question}`;
 
-            const speech = new SpeechSynthesisUtterance(text);
+            const speech =
+                new SpeechSynthesisUtterance(text);
 
             speech.rate = 0.9;
             speech.pitch = 1;
@@ -556,7 +536,6 @@ with col2:
             window.speechSynthesis.speak(speech);
         }}
 
-        // Automatically read the question
         window.onload = function() {{
             speakQuestion();
         }};
@@ -581,7 +560,13 @@ with col2:
             height=50
         )
 
-        st.markdown("### 🎙️ Your Answer")
+        # -------------------------------------------------
+        # ANSWER
+        # -------------------------------------------------
+
+        st.markdown(
+            "### 🎙️ Your Answer"
+        )
 
         st.write(
             "Click the microphone button and answer "
@@ -610,63 +595,94 @@ with col2:
                 "✅ Answer recorded successfully!"
             )
 
+            # TEST STEP 1
+
+            st.info(
+                "Step 1: Audio received successfully."
+            )
+
             try:
 
-                # -----------------------------------------
+                # =========================================
                 # SPEECH TO TEXT
-                # -----------------------------------------
+                # =========================================
 
-                with st.spinner("🎧 Converting your answer to text..."):
+                with st.spinner(
+                    "🎧 Converting your answer to text..."
+                ):
 
-               transcription = client.audio.transcriptions.create(
-               file=("answer.wav", audio["bytes"], "audio/wav"),
-               model="whisper-large-v3-turbo",
-               response_format="text"
-               )
+                    audio_bytes = audio["bytes"]
+
+                    st.write(
+                        "Audio received:",
+                        len(audio_bytes),
+                        "bytes"
+                    )
+
+                    transcription = (
+                        client.audio.transcriptions.create(
+                            file=(
+                                "answer.wav",
+                                audio_bytes,
+                                "audio/wav"
+                            ),
+                            model="whisper-large-v3-turbo",
+                            response_format="text"
+                        )
+                    )
+
+                # TEST STEP 2
+
+                st.success(
+                    "Step 2: Transcription successful."
+                )
 
                 answer_text = transcription
-                st.markdown("### 📝 Your Answer")
+
+                st.markdown(
+                    "### 📝 Your Answer"
+                )
 
                 st.write(answer_text)
 
-                # -----------------------------------------
+                # =========================================
                 # AI EVALUATION
-                # -----------------------------------------
+                # =========================================
 
                 evaluation_prompt = f"""
-                You are an AI interviewer evaluating
-                a college student/fresher.
+You are an AI interviewer evaluating
+a college student/fresher.
 
-                Interview Question:
-                {current_question}
+Interview Question:
+{current_question}
 
-                Candidate Answer:
-                {answer_text}
+Candidate Answer:
+{answer_text}
 
-                Evaluate the candidate's answer.
+Evaluate the candidate's answer.
 
-                Give the evaluation in this format:
+Give the evaluation in this format:
 
-                Score: X/10
+Score: X/10
 
-                What was good:
-                - Mention 1 or 2 positive points.
+What was good:
+- Mention 1 or 2 positive points.
 
-                What can be improved:
-                - Mention important mistakes or missing points.
+What can be improved:
+- Mention important mistakes or missing points.
 
-                Suggestions:
-                - Give simple practical suggestions.
+Suggestions:
+- Give simple practical suggestions.
 
-                Better Answer:
-                Give a short and simple improved answer.
+Better Answer:
+Give a short and simple improved answer.
 
-                Communication Feedback:
-                Give one short sentence about the
-                clarity and structure of the answer.
+Communication Feedback:
+Give one short sentence about the
+clarity and structure of the answer.
 
-                Be supportive and suitable for a fresher.
-                """
+Be supportive and suitable for a fresher.
+"""
 
                 with st.spinner(
                     "🤖 AI is evaluating your answer..."
@@ -676,40 +692,52 @@ with col2:
                         evaluation_prompt
                     )
 
-                st.session_state["evaluation"] = evaluation
+                # TEST STEP 3
 
-                st.markdown("### 📊 AI Evaluation")
+                st.success(
+                    "Step 3: AI evaluation successful."
+                )
+
+                st.session_state[
+                    "evaluation"
+                ] = evaluation
+
+                st.markdown(
+                    "### 📊 AI Evaluation"
+                )
 
                 st.write(evaluation)
 
-                # -----------------------------------------
+                # =========================================
                 # NEXT QUESTION
-                # -----------------------------------------
+                # =========================================
 
                 if st.button(
                     "➡️ Next Question",
                     key=f"next_{question_number}"
                 ):
 
-                    old_question_number = question_number
+                    old_question_number = (
+                        question_number
+                    )
 
                     next_question_prompt = f"""
-                    You are an AI interviewer conducting
-                    a software job interview for a college
-                    student/fresher.
+You are an AI interviewer conducting
+a software job interview for a college
+student/fresher.
 
-                    The candidate has completed question
-                    {old_question_number}.
+The candidate has completed question
+{old_question_number}.
 
-                    Generate ONE new simple technical
-                    interview question.
+Generate ONE new simple technical
+interview question.
 
-                    Do not repeat the previous question.
-                    Do not give the answer.
-                    Do not ask multiple questions.
+Do not repeat the previous question.
+Do not give the answer.
+Do not ask multiple questions.
 
-                    Only return the interview question.
-                    """
+Only return the interview question.
+"""
 
                     try:
 
@@ -738,20 +766,25 @@ with col2:
                     except Exception as e:
 
                         st.error(
-                            f"Could not generate next question: {e}"
+                            "Could not generate "
+                            f"next question: {e}"
                         )
 
             except Exception as e:
 
                 st.error(
-                    f"Could not process your answer: {e}"
+                    "Could not process your answer: "
+                    f"{e}"
                 )
 
     # -------------------------------------------------
     # END INTERVIEW
     # -------------------------------------------------
 
-    if st.session_state.get("interview_started", False):
+    if st.session_state.get(
+        "interview_started",
+        False
+    ):
 
         st.divider()
 
@@ -760,35 +793,53 @@ with col2:
             key="end_interview"
         ):
 
-            st.session_state["interview_started"] = False
-            st.session_state["current_question"] = ""
-            st.session_state["question_number"] = 1
-            st.session_state["evaluation"] = None
+            st.session_state[
+                "interview_started"
+            ] = False
+
+            st.session_state[
+                "current_question"
+            ] = ""
+
+            st.session_state[
+                "question_number"
+            ] = 1
+
+            st.session_state[
+                "evaluation"
+            ] = None
 
             st.success(
                 "Interview ended. Great job! 🎉"
             )
 
             st.rerun()
+
+
 # =====================================================
 # AI CHATBOT
 # =====================================================
 
 st.divider()
 
-st.header("💬 AI Career Chatbot")
+st.header(
+    "💬 AI Career Chatbot"
+)
 
 st.write(
     "Ask questions about resumes, interviews, "
     "skills, careers, programming, or job preparation."
 )
 
+
 # -----------------------------------------------------
 # CHAT HISTORY
 # -----------------------------------------------------
 
 if "chat_history" not in st.session_state:
+
     st.session_state.chat_history = []
+
 
 # -----------------------------------------------------
 # DISPLAY PREVIOUS MESSAGES
@@ -796,8 +847,14 @@ if "chat_history" not in st.session_state:
 
 for message in st.session_state.chat_history:
 
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    with st.chat_message(
+        message["role"]
+    ):
+
+        st.markdown(
+            message["content"]
+        )
+
 
 # -----------------------------------------------------
 # USER INPUT
@@ -807,11 +864,8 @@ user_question = st.chat_input(
     "Ask IntervAI anything..."
 )
 
-if user_question:
 
-    # ---------------------------------------------
-    # DISPLAY USER MESSAGE
-    # ---------------------------------------------
+if user_question:
 
     st.session_state.chat_history.append(
         {
@@ -821,11 +875,14 @@ if user_question:
     )
 
     with st.chat_message("user"):
-        st.markdown(user_question)
 
-    # ---------------------------------------------
+        st.markdown(
+            user_question
+        )
+
+    # -------------------------------------------------
     # CHATBOT PROMPT
-    # ---------------------------------------------
+    # -------------------------------------------------
 
     chatbot_prompt = f"""
 You are IntervAI, an AI career and interview
@@ -858,25 +915,27 @@ USER QUESTION:
 {user_question}
 """
 
-    # ---------------------------------------------
+    # -------------------------------------------------
     # GENERATE RESPONSE
-    # ---------------------------------------------
+    # -------------------------------------------------
 
     try:
 
         with st.chat_message("assistant"):
 
-            with st.spinner("🤖 Thinking..."):
+            with st.spinner(
+                "🤖 Thinking..."
+            ):
 
-                chatbot_response = generate_response(
-                    chatbot_prompt
+                chatbot_response = (
+                    generate_response(
+                        chatbot_prompt
+                    )
                 )
 
-            st.markdown(chatbot_response)
-
-        # -----------------------------------------
-        # SAVE AI RESPONSE
-        # -----------------------------------------
+            st.markdown(
+                chatbot_response
+            )
 
         st.session_state.chat_history.append(
             {
@@ -890,6 +949,7 @@ USER QUESTION:
         st.error(
             f"Could not generate response: {e}"
         )
+
 
 # -----------------------------------------------------
 # CLEAR CHAT
@@ -905,4 +965,3 @@ if st.session_state.chat_history:
         st.session_state.chat_history = []
 
         st.rerun()
-
